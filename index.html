@@ -39,112 +39,129 @@
 
         /* --- PRINT STYLES --- */
         @media print {
-            @page {
-                size: landscape;
-                margin: 0.5cm;
-            }
             body {
                 background: white;
                 color: black;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            /* Hide UI Elements */
-            header, #ai-modal, .no-print, #btn-print-float {
+
+            /* --- COMMON HIDDEN ELEMENTS --- */
+            /* Hide UI controls always */
+            header .flex button, 
+            #ai-modal, 
+            #confirm-modal, 
+            #summary-modal, 
+            .no-print, 
+            #btn-print-float, 
+            #current-time-marker, 
+            .now-divider, 
+            .maps-btn {
+                display: none !important;
+            }
+
+            /* --- MODE: PRINTING SUMMARY --- */
+            body.printing-summary @page {
+                size: portrait; /* List view is better in portrait */
+                margin: 1cm;
+            }
+
+            body.printing-summary main,
+            body.printing-summary header {
+                display: none !important;
+            }
+
+            body.printing-summary #summary-modal {
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                max-width: none !important;
+                box-shadow: none !important;
+                overflow: visible !important;
+                background: white !important;
+                inset: 0 !important;
+                transform: none !important;
+            }
+
+            body.printing-summary #summary-content {
+                overflow: visible !important;
+                height: auto !important;
+            }
+
+            body.printing-summary #summary-modal button {
+                display: none !important; /* Hide close/print icons inside modal */
+            }
+            
+            body.printing-summary #summary-footer {
+                border-top: 1px solid #000 !important;
+            }
+
+            /* --- MODE: PRINTING TIMELINE (Default) --- */
+            body:not(.printing-summary) @page {
+                size: landscape;
+                margin: 0.5cm;
+            }
+
+            body:not(.printing-summary) header {
+                display: none !important; /* Hide header container completely */
+            }
+
+            body:not(.printing-summary) #summary-modal {
                 display: none !important;
             }
             
-            /* Explicitly hide Agenda view and show Timeline view */
-            #view-agenda {
+            body:not(.printing-summary) #view-agenda {
                 display: none !important;
             }
-            #view-timeline {
+
+            body:not(.printing-summary) #view-timeline {
                 display: block !important;
                 overflow: visible !important;
                 padding-bottom: 0 !important;
             }
 
-            /* Main Content Adjustments */
-            main {
+            body:not(.printing-summary) main {
                 padding: 0 !important;
                 margin: 0 !important;
                 max-width: none !important;
             }
             
-            /* Remove fixed widths and scrolling constraint for print */
-            #view-timeline > div {
+            body:not(.printing-summary) #view-timeline > div {
                 min-width: 0 !important;
                 border: none !important;
                 box-shadow: none !important;
-                /* Scale slightly to ensure 12h fits in A4 Landscape */
                 transform: scale(0.85); 
                 transform-origin: top left;
-                width: 115% !important; /* Compensate for scale */
+                width: 115% !important;
             }
 
-            /* --- HIGH CONTRAST OVERRIDES FOR PRINT --- */
-            
-            /* General text to black */
-            .text-slate-400, .text-slate-500, .text-slate-700, .text-slate-800 {
+            /* High Contrast for Timeline */
+            body:not(.printing-summary) .text-slate-400, 
+            body:not(.printing-summary) .text-slate-500, 
+            body:not(.printing-summary) .text-slate-700, 
+            body:not(.printing-summary) .text-slate-800 {
                 color: #000000 !important;
             }
-            
-            /* Darker borders for grid */
-            .border-slate-100, .border-slate-200, .border-slate-300 {
-                border-color: #94a3b8 !important; /* Slate-400 */
+            body:not(.printing-summary) .border-slate-100, 
+            body:not(.printing-summary) .border-slate-200, 
+            body:not(.printing-summary) .border-slate-300 {
+                border-color: #94a3b8 !important;
             }
-
-            /* Timeline Bars: Force solid borders, bold text, no shadows */
-            #view-timeline .absolute {
-                border: 1px solid #334155 !important; /* Slate-700 border */
+            body:not(.printing-summary) #view-timeline .absolute {
+                border: 1px solid #334155 !important;
                 color: #000000 !important;
                 font-weight: 700 !important;
                 box-shadow: none !important;
-                opacity: 1 !important; /* Remove transparency */
+                opacity: 1 !important;
             }
-
-            /* Darker Backgrounds (overriding Tailwind pastel classes) */
-            
-            /* Blue (Fixed Shows) */
-            .bg-blue-100 {
-                background-color: #93c5fd !important; /* Blue-300 (much darker than 100) */
-            }
-
-            /* Emerald (Continuous) */
-            .bg-emerald-50, .bg-emerald-100 {
-                background-color: #86efac !important; /* Emerald-300 */
-            }
-
-            /* Amber (Special/Night) */
-            .bg-amber-100, .bg-amber-50 {
-                background-color: #fcd34d !important; /* Amber-300 */
-            }
-
-            /* Green (Selected) */
-            .bg-green-500 {
-                background-color: #16a34a !important; /* Green-600 */
-                color: white !important;
-            }
-
-            /* Grey (Related/Visto) */
-            .bg-slate-200 {
-                background-color: #e2e8f0 !important;
-                color: #94a3b8 !important;
-                border-style: dashed !important;
-            }
-            
-            /* Red (Impossible) */
-            .bg-red-50 {
-                background-color: #fef2f2 !important;
-                color: #b91c1c !important;
-                text-decoration: line-through;
-                opacity: 0.6;
-            }
-
-            /* Headers */
-            h1, h2, h3, h4 {
-                color: #000000 !important;
-            }
+            body:not(.printing-summary) .bg-blue-100 { background-color: #93c5fd !important; }
+            body:not(.printing-summary) .bg-emerald-50, body:not(.printing-summary) .bg-emerald-100 { background-color: #86efac !important; }
+            body:not(.printing-summary) .bg-amber-100, body:not(.printing-summary) .bg-amber-50 { background-color: #fcd34d !important; }
+            body:not(.printing-summary) .bg-green-500 { background-color: #16a34a !important; color: white !important; }
+            body:not(.printing-summary) .bg-orange-500 { background-color: #ea580c !important; color: white !important; }
+            body:not(.printing-summary) .bg-slate-200 { background-color: #e2e8f0 !important; color: #94a3b8 !important; border-style: dashed !important; }
+            body:not(.printing-summary) .bg-red-50 { background-color: #fef2f2 !important; color: #b91c1c !important; text-decoration: line-through; opacity: 0.6; }
         }
     </style>
 </head>
@@ -172,7 +189,12 @@
                     </button>
                 </div>
                 
-                <!-- Print Button -->
+                <!-- Summary Button -->
+                <button onclick="toggleSummaryModal()" class="bg-indigo-700 hover:bg-indigo-600 text-white p-2 rounded-lg transition-colors shadow-md" title="Ver Resumen">
+                    <i data-lucide="list-checks" class="w-5 h-5"></i>
+                </button>
+
+                <!-- Print Button (Timeline) -->
                 <button onclick="printTimeline()" class="bg-indigo-700 hover:bg-indigo-600 text-white p-2 rounded-lg transition-colors shadow-md" title="Imprimir Línea de Tiempo">
                     <i data-lucide="printer" class="w-5 h-5"></i>
                 </button>
@@ -196,7 +218,7 @@
                     <i data-lucide="footprints" class="w-5 h-5 shrink-0 mt-0.5 text-blue-600"></i>
                     <div>
                         <strong>Cálculo de Rutas:</strong> <span id="status-text" class="font-bold">Caminatas + 15 min de cola</span>.
-                        <div class="text-xs opacity-80 mt-0.5">Las sesiones imposibles se marcan en rojo.</div>
+                        <div class="text-xs opacity-80 mt-0.5">Las sesiones imposibles se marcan en rojo (clic para forzar).</div>
                     </div>
                 </div>
                 
@@ -216,11 +238,10 @@
             </div>
 
             <div class="flex flex-wrap gap-3 text-xs px-2 text-slate-600 justify-center sm:justify-start font-medium">
-                <div class="flex items-center gap-1 bg-white px-2 py-1 rounded border"><span class="w-3 h-3 rounded-full bg-green-500 border border-green-600"></span> Tu Selección</div>
+                <div class="flex items-center gap-1 bg-white px-2 py-1 rounded border"><span class="w-3 h-3 rounded-full bg-green-500 border border-green-600"></span> Selección Óptima</div>
+                <div class="flex items-center gap-1 bg-white px-2 py-1 rounded border"><span class="w-3 h-3 rounded-full bg-orange-500 border border-orange-600"></span> Selección Forzada</div>
                 <div class="flex items-center gap-1 bg-white px-2 py-1 rounded border"><span class="w-3 h-3 rounded-full bg-slate-300 border border-slate-400"></span> Ya visto</div>
-                <div class="flex items-center gap-1 bg-white px-2 py-1 rounded border"><span class="w-3 h-3 rounded-full bg-red-100 border border-red-300"></span> Imposible llegar</div>
-                <div class="flex items-center gap-1 px-2 py-1"><span class="w-3 h-3 rounded-full bg-blue-100 border border-blue-300"></span> Fijo</div>
-                <div class="flex items-center gap-1 px-2 py-1"><span class="w-3 h-3 rounded-full bg-emerald-100 border border-emerald-300"></span> Continuo</div>
+                <div class="flex items-center gap-1 bg-white px-2 py-1 rounded border"><span class="w-3 h-3 rounded-full bg-red-100 border border-red-300"></span> Imposible</div>
             </div>
         </div>
 
@@ -230,23 +251,88 @@
         </div>
 
         <!-- VIEW: Timeline (Gantt Chart) -->
-        <div id="view-timeline" class="hidden overflow-x-auto pb-12">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 min-w-[800px]">
+        <div id="view-timeline" class="hidden overflow-x-auto pb-12 relative">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 min-w-[800px] relative">
                 <!-- Time Header -->
-                <div class="flex border-b border-slate-100 pb-2 mb-2 sticky left-0">
-                    <div class="w-64 shrink-0 font-bold text-slate-400 text-sm">Espectáculo & Ubicación</div>
+                <div class="flex border-b border-slate-100 pb-2 mb-2 sticky top-0 bg-white z-40">
+                    <div class="w-64 shrink-0 font-bold text-slate-400 text-sm sticky left-0 bg-white z-50 pl-2">Espectáculo & Ubicación</div>
                     <div class="flex-1 relative h-6" id="timeline-header">
                         <!-- Time markers generated by JS -->
                     </div>
                 </div>
-                <!-- Timeline Rows -->
-                <div id="timeline-rows" class="space-y-3 relative">
-                    <!-- Rows generated by JS -->
+                <!-- Timeline Rows Container -->
+                <div class="relative">
+                    <!-- Current Time Line (Vertical) -->
+                    <div id="current-time-marker" class="absolute top-0 bottom-0 w-0.5 bg-black z-30 pointer-events-none hidden">
+                        <div class="absolute -top-6 -left-6 bg-black text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+                            <span id="current-time-label">12:00</span>
+                        </div>
+                    </div>
+                    
+                    <div id="timeline-rows" class="space-y-3 relative">
+                        <!-- Rows generated by JS -->
+                    </div>
                 </div>
             </div>
         </div>
 
     </main>
+
+    <!-- CONFIRM FORCE MODAL -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black/50 z-[60] hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 animate-[scaleIn_0.2s_ease-out]">
+            <div class="flex items-center gap-3 text-amber-600 mb-4">
+                <div class="bg-amber-100 p-2 rounded-full">
+                    <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-bold text-lg text-slate-800">¿Forzar horario?</h3>
+            </div>
+            
+            <p class="text-sm text-slate-600 mb-4 leading-relaxed" id="confirm-reason">
+                El algoritmo indica que no llegas a tiempo.
+            </p>
+
+            <div class="flex gap-3 justify-end">
+                <button onclick="closeConfirmModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                    Cancelar
+                </button>
+                <button id="btn-force-confirm" class="px-4 py-2 text-sm font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-lg shadow-md transition-colors flex items-center gap-2">
+                    Sí, correré
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUMMARY MODAL -->
+    <div id="summary-modal" class="fixed inset-0 bg-black/50 z-[70] hidden backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full h-[80vh] flex flex-col animate-[scaleIn_0.2s_ease-out]">
+            <!-- Header -->
+            <div class="bg-indigo-900 text-white p-4 rounded-t-xl flex justify-between items-center shrink-0">
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <i data-lucide="list-checks" class="w-5 h-5"></i>
+                    Tu Itinerario
+                </h3>
+                <div class="flex gap-2">
+                    <button onclick="printSummary()" class="text-white/80 hover:text-white p-1 hover:bg-indigo-800 rounded transition-colors" title="Imprimir Resumen">
+                        <i data-lucide="printer" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="toggleSummaryModal()" class="text-white/80 hover:text-white p-1 hover:bg-indigo-800 rounded transition-colors">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div id="summary-content" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+                <!-- Generated via JS -->
+            </div>
+
+            <!-- Footer Stats -->
+            <div id="summary-footer" class="p-4 bg-white border-t border-slate-200 text-sm text-slate-600 flex justify-between items-center rounded-b-xl">
+                <!-- Generated via JS -->
+            </div>
+        </div>
+    </div>
 
     <!-- AI Modal Overlay -->
     <div id="ai-modal" class="fixed inset-0 bg-black/50 z-50 hidden backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity opacity-0 no-print">
@@ -362,6 +448,10 @@
     <script>
         // --- CONFIGURATION ---
         const BUFFER_QUEUE = 15; // Minutes required BEFORE show starts
+        const METERS_PER_MIN = 70; // Approx walking speed (m/min)
+        const START_HOUR = 10;
+        const END_HOUR = 22;
+        const WIDTH_PER_HOUR = 100;
 
         // Location IDs
         const LOC = {
@@ -410,12 +500,28 @@
         // --- STATE ---
         let selectedSessionsList = [];
         let includeQueue = true; 
-        let includeWalk = true; // NEW STATE
+        let includeWalk = true; 
+        let pendingForceAction = null; // Stores data for modal confirmation
 
-        // --- UTILITIES (Restored) ---
+        // --- UTILITIES ---
         function timeToDecimal(timeStr) {
             const [h, m] = timeStr.split(':').map(Number);
             return h + (m / 60);
+        }
+
+        function formatTime(decimal) {
+            let h = Math.floor(decimal);
+            let m = Math.round((decimal - h) * 60);
+            if (m === 60) {
+                h++;
+                m = 0;
+            }
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+        }
+
+        function getMapsLink(locationName) {
+            const query = encodeURIComponent(`Puy du Fou España ${locationName}`);
+            return `https://www.google.com/maps/search/?api=1&query=${query}`;
         }
 
         function getColorClass(type) {
@@ -425,6 +531,23 @@
                 case 'special': return 'bg-amber-100 text-amber-800 border-amber-200';
                 default: return 'bg-slate-100';
             }
+        }
+
+        function getShowTimes(show) {
+            if (show.type === 'fixed' || show.type === 'special') {
+                return show.times;
+            } else if (show.type === 'continuous' && show.duration > 0) {
+                const slots = [];
+                let t = timeToDecimal(show.start);
+                const end = timeToDecimal(show.end);
+                const dur = show.duration / 60;
+                while (t + dur <= end + 0.001) { 
+                    slots.push(formatTime(t));
+                    t += dur;
+                }
+                return slots;
+            }
+            return null;
         }
 
         function switchView(viewName) {
@@ -443,6 +566,7 @@
                 btnTimeline.className = "px-3 py-1.5 rounded-md text-sm font-medium transition-all bg-white text-indigo-900 shadow";
                 btnAgenda.className = "px-3 py-1.5 rounded-md text-sm font-medium transition-all text-indigo-200 hover:text-white";
                 renderTimeline();
+                updateCurrentTimeLine(); // Update immediately on view switch
             }
         }
 
@@ -463,6 +587,18 @@
                 setTimeout(() => {
                     modal.classList.add('hidden');
                 }, 300);
+            }
+        }
+
+        function toggleSummaryModal() {
+            const modal = document.getElementById('summary-modal');
+            const isHidden = modal.classList.contains('hidden');
+            
+            if (isHidden) {
+                renderSummary();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
             }
         }
 
@@ -525,7 +661,30 @@
             return `${name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}-${timeStr.replace(':','')}`;
         }
 
-        function toggleSession(id, showName, startDec, duration, locId) {
+        function handleSessionClick(id, name, start, duration, locId) {
+            const existingIndex = selectedSessionsList.findIndex(s => s.id === id);
+            
+            // 1. If already selected, deselect directly
+            if (existingIndex > -1) {
+                toggleSession(id, name, start, duration, locId);
+                return;
+            }
+
+            // 2. If new, check for conflicts
+            const conflict = checkConflict({ name, start, duration, locId });
+            
+            if (!conflict) {
+                // No conflict -> Select Normally
+                toggleSession(id, name, start, duration, locId, false);
+            } else {
+                // Conflict found -> Open Modal
+                openConfirmModal(conflict, () => {
+                    toggleSession(id, name, start, duration, locId, true);
+                });
+            }
+        }
+
+        function toggleSession(id, showName, startDec, duration, locId, isForced = false) {
             const existingIndex = selectedSessionsList.findIndex(s => s.id === id);
             
             if (existingIndex > -1) {
@@ -538,44 +697,186 @@
                     name: showName,
                     start: startDec,
                     end: endDec,
-                    locId: locId
+                    locId: locId,
+                    forced: isForced
                 });
             }
             renderAgenda();
             renderTimeline();
         }
         
+        function checkConflict(evt) {
+            const evtEnd = evt.start + (evt.duration / 60);
+
+            for (const session of selectedSessionsList) {
+                if (session.name === evt.name) continue;
+
+                const walkMins = getWalkTime(session.locId, evt.locId);
+                const walkHours = includeWalk ? (walkMins / 60) : 0;
+                const queueHours = includeQueue ? (BUFFER_QUEUE / 60) : 0;
+
+                if (evt.start >= session.end) {
+                    const availableGap = evt.start - session.end;
+                    const neededGap = walkHours + queueHours;
+                    if (availableGap < neededGap) {
+                        return `No llegas desde <strong>${session.name}</strong>.<br>Hueco: ${Math.round(availableGap*60)}m. Necesitas: ${Math.round(neededGap*60)}m.`;
+                    }
+                }
+                else if (session.start >= evtEnd) {
+                     const availableGap = session.start - evtEnd;
+                     const neededGap = walkHours + queueHours;
+                     if (availableGap < neededGap) {
+                         return `Te pisa la llegada a <strong>${session.name}</strong>.<br>Hueco: ${Math.round(availableGap*60)}m. Necesitas: ${Math.round(neededGap*60)}m.`;
+                     }
+                }
+                else {
+                    return `Se solapa directamente con <strong>${session.name}</strong>.`;
+                }
+            }
+            return null;
+        }
+
         function getStatus(evt) {
-            const isSelected = selectedSessionsList.some(s => s.id === evt.id);
-            if (isSelected) return 'selected';
+            const selected = selectedSessionsList.find(s => s.id === evt.id);
+            if (selected) return selected.forced ? 'selected-forced' : 'selected';
 
             const isSameShowSelected = selectedSessionsList.some(s => s.name === evt.name);
             if (isSameShowSelected) return 'related';
 
-            for (const session of selectedSessionsList) {
-                const walkMins = getWalkTime(session.locId, evt.locId);
-                
-                // Toggle Logic
-                const walkHours = includeWalk ? (walkMins / 60) : 0;
-                const queueHours = includeQueue ? (BUFFER_QUEUE / 60) : 0;
+            const conflict = checkConflict({
+                name: evt.name,
+                start: evt.time,
+                duration: evt.duration,
+                locId: evt.locId
+            });
 
-                if (evt.time >= session.end) {
-                    if ((evt.time - session.end) < (walkHours + queueHours)) {
-                        return 'impossible'; 
-                    }
+            return conflict ? 'impossible' : 'available';
+        }
+
+        // --- ITINERARY METRICS ---
+        
+        function getItineraryMetrics() {
+            // Sort selected sessions chronologically
+            const sorted = [...selectedSessionsList].sort((a, b) => a.start - b.start);
+            const metricsMap = new Map();
+            
+            let totalDist = 0;
+            let lastLoc = LOC.ENTRANCE; // Start at Entrance
+            let lastShowName = "Entrada";
+
+            sorted.forEach((session, index) => {
+                const walkMins = getWalkTime(lastLoc, session.locId);
+                const distMeters = walkMins * METERS_PER_MIN;
+                
+                // For the very first show, we show distance from Entrance
+                // For subsequent shows, we show distance from previous show
+                
+                totalDist += distMeters;
+                
+                metricsMap.set(session.id, {
+                    fromName: lastShowName,
+                    walkMins: walkMins,
+                    distMeters: distMeters,
+                    totalDistKm: (totalDist / 1000).toFixed(2)
+                });
+
+                lastLoc = session.locId;
+                lastShowName = session.name;
+            });
+            
+            return metricsMap;
+        }
+
+        // --- CURRENT TIME LOGIC ---
+        function updateCurrentTimeLine() {
+            const now = new Date();
+            const currentHour = now.getHours() + now.getMinutes() / 60;
+            const marker = document.getElementById('current-time-marker');
+            const label = document.getElementById('current-time-label');
+            const formattedTime = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+
+            // Update Label text
+            if(label) label.innerText = formattedTime;
+
+            // --- Update TIMELINE Marker ---
+            if (currentHour >= START_HOUR && currentHour <= END_HOUR) {
+                // Calculate position: (Hour - Start) * Width + NameColWidth (w-64 = 16rem = ~256px + padding)
+                // Actually, the marker is inside 'timeline-rows' container which is 'relative flex-1'
+                // Wait, the marker is absolute in the parent of 'timeline-rows'.
+                // The parent has `min-w-[800px] relative`.
+                // The header structure is: | Name (w-64) | Timeline (flex-1) |
+                // So the marker needs to be offset by w-64 (256px approx). 
+                // Let's use 16rem + padding.
+                
+                const nameColWidth = 16 * 16; // 256px
+                const paddingLeft = 8; // pl-2 approx
+                const totalLeftOffset = nameColWidth + paddingLeft; 
+                
+                const leftPos = (currentHour - START_HOUR) * WIDTH_PER_HOUR + totalLeftOffset;
+                
+                if(marker) {
+                    marker.style.left = `${leftPos}px`;
+                    marker.classList.remove('hidden');
                 }
-                else if (session.start >= (evt.time + (evt.duration/60))) {
-                     if ((session.start - (evt.time + (evt.duration/60))) < (walkHours + queueHours)) {
-                         return 'impossible';
-                     }
-                }
-                else {
-                    return 'impossible'; 
-                }
+            } else {
+                if(marker) marker.classList.add('hidden');
             }
 
-            return 'available';
+            // --- Update AGENDA Marker (Now Divider) ---
+            // Find insertion point in Agenda list
+            const agendaContainer = document.getElementById('view-agenda');
+            // Remove existing divider
+            const existingDivider = document.querySelector('.now-divider');
+            if(existingDivider) existingDivider.remove();
+
+            if (agendaContainer && !agendaContainer.classList.contains('hidden')) {
+                const cards = agendaContainer.querySelectorAll('div[id^="agenda-"]');
+                let inserted = false;
+                
+                // We need to check the time of each card.
+                // The card ID is based on name and time string.
+                // Let's rely on data attributes or just re-render agenda periodically?
+                // Re-rendering whole agenda every minute is fine.
+                // But to avoid flicker, let's just insert it based on time comparison if we have data.
+                // Simpler: Just re-render agenda if view is active.
+            }
         }
+
+        // --- CONFIRM MODAL ---
+        
+        function openConfirmModal(reason, onConfirm) {
+            const modal = document.getElementById('confirm-modal');
+            const reasonText = document.getElementById('confirm-reason');
+            const confirmBtn = document.getElementById('btn-force-confirm');
+            
+            reasonText.innerHTML = reason;
+            modal.classList.remove('hidden');
+            
+            const newBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+            
+            newBtn.addEventListener('click', () => {
+                onConfirm();
+                closeConfirmModal();
+            });
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+        }
+
+        // --- PRINT LOGIC ---
+        function printSummary() {
+            document.body.classList.add('printing-summary');
+            window.print();
+            setTimeout(() => {
+                document.body.classList.remove('printing-summary');
+            }, 500); 
+        }
+        
+        window.addEventListener("afterprint", () => {
+            document.body.classList.remove("printing-summary");
+        });
 
         // --- API ---
 
@@ -625,7 +926,6 @@
             document.getElementById('btn-generate').disabled = false;
         }
 
-        // Chat Helper Functions
         function appendMessage(sender, text) {
             const history = document.getElementById('chat-history');
             const div = document.createElement('div');
@@ -722,10 +1022,16 @@
             const container = document.getElementById('view-agenda');
             container.innerHTML = '';
             
+            // 1. Calculate Itinerary Metrics first
+            const itineraryMetrics = getItineraryMetrics();
+
+            // 2. Prepare all events list
             let events = [];
             shows.forEach(show => {
-                if (show.type === 'fixed' || show.type === 'special') {
-                    show.times.forEach(t => {
+                const generatedTimes = getShowTimes(show);
+                
+                if (generatedTimes) {
+                    generatedTimes.forEach(t => {
                         events.push({
                             time: timeToDecimal(t),
                             timeStr: t,
@@ -754,9 +1060,33 @@
             });
             events.sort((a, b) => a.time - b.time);
 
+            // Get selected sessions sorted by time for context lookups
+            const sortedSelections = [...selectedSessionsList].sort((a, b) => a.start - b.start);
+
             let currentHour = -1;
             
+            // --- TIME DIVIDER LOGIC ---
+            const now = new Date();
+            const nowDec = now.getHours() + now.getMinutes()/60;
+            let hasInsertedNow = false;
+
             events.forEach(evt => {
+                
+                // Check for Time Divider Insertion
+                if (!hasInsertedNow && evt.time > nowDec && nowDec > 10) { // Only insert if within park hours context
+                    const divider = document.createElement('div');
+                    divider.className = "now-divider flex items-center gap-2 py-4 px-2 animate-[fadeIn_0.5s]";
+                    divider.innerHTML = `
+                        <div class="h-px bg-red-400 flex-1"></div>
+                        <div class="text-xs font-bold text-red-500 flex items-center gap-1 border border-red-200 bg-red-50 px-2 py-1 rounded-full">
+                            <i data-lucide="clock" class="w-3 h-3"></i> AHORA (${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')})
+                        </div>
+                        <div class="h-px bg-red-400 flex-1"></div>
+                    `;
+                    container.appendChild(divider);
+                    hasInsertedNow = true;
+                }
+
                 const hour = Math.floor(evt.time);
                 if (hour !== currentHour) {
                     currentHour = hour;
@@ -770,59 +1100,188 @@
                 evt.id = id; 
                 const status = getStatus(evt);
                 
+                // Inject Travel Connector if selected
+                if (status.includes('selected') && itineraryMetrics.has(id)) {
+                    const metrics = itineraryMetrics.get(id);
+                    const connector = document.createElement('div');
+                    connector.className = "ml-8 pl-4 border-l-2 border-dashed border-slate-300 py-3 my-1 text-xs text-slate-500 animate-[fadeIn_0.5s]";
+                    connector.innerHTML = `
+                        <div class="flex items-center gap-2 mb-1">
+                            <i data-lucide="footprints" class="w-4 h-4 text-slate-400"></i>
+                            <span>Caminar <strong class="text-slate-600">${metrics.walkMins} min</strong> (${Math.round(metrics.distMeters)}m) desde <span class="italic text-slate-600">${metrics.fromName}</span></span>
+                        </div>
+                        <div class="flex items-center gap-2 text-indigo-600 font-semibold bg-indigo-50 w-fit px-2 py-0.5 rounded">
+                            <i data-lucide="map" class="w-3 h-3"></i>
+                            Distancia acumulada: ${metrics.totalDistKm} km
+                        </div>
+                    `;
+                    container.appendChild(connector);
+                }
+
                 const card = document.createElement('div');
                 card.id = `agenda-${id}`;
+                card.onclick = () => handleSessionClick(id, evt.name, evt.time, evt.duration, evt.locId);
                 
-                // Only toggle if feasible
-                if(status !== 'impossible') {
-                    card.onclick = () => toggleSession(id, evt.name, evt.time, evt.duration, evt.locId);
-                }
-                
-                let classes = "flex items-center p-3 rounded-lg border shadow-sm transition-all select-none ";
-                let cursor = "cursor-pointer";
+                let classes = "flex items-center p-3 rounded-lg border shadow-sm transition-all select-none cursor-pointer ";
                 
                 if (status === 'selected') {
                     classes += "bg-green-100 border-green-500 ring-1 ring-green-500";
+                } else if (status === 'selected-forced') {
+                    classes += "bg-orange-50 border-orange-500 ring-1 ring-orange-500";
                 } else if (status === 'related') {
                     classes += "bg-slate-100 border-slate-200 grayscale opacity-60";
                 } else if (status === 'impossible') {
-                    classes += "bg-red-50 border-red-100 opacity-50 cursor-not-allowed";
-                    cursor = "";
+                    classes += "bg-red-50 border-red-100 opacity-70 hover:opacity-100 border-dashed hover:border-solid hover:border-red-400";
                 } else {
                     classes += "bg-white border-slate-100 hover:shadow-md";
                 }
                 
-                card.className = `${classes} ${cursor}`;
+                card.className = classes;
 
                 let timeHtml = evt.isRange 
                     ? `<span class="font-bold text-sm">${evt.timeStr} ➔ ${evt.endTimeStr}</span>`
                     : `<span class="font-bold text-lg">${evt.timeStr}</span>`;
 
-                const locBadge = `<span class="text-[10px] uppercase tracking-wider text-slate-400 block mt-1"><i data-lucide="map-pin" class="w-3 h-3 inline"></i> ${evt.locationName}</span>`;
+                const mapsLink = getMapsLink(evt.locationName);
+                
+                const locBadge = `
+                    <div class="text-[10px] uppercase tracking-wider text-slate-400 mt-1 flex items-center gap-2">
+                        <div class="flex items-center gap-1">
+                            <i data-lucide="map-pin" class="w-3 h-3"></i> 
+                            ${evt.locationName}
+                        </div>
+                        <a href="${mapsLink}" target="_blank" onclick="event.stopPropagation()" class="maps-btn bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-full p-1 transition-colors" title="Ver ubicación en Google Maps">
+                            <i data-lucide="map" class="w-3 h-3"></i>
+                        </a>
+                    </div>`;
+
+                // Calculate Distance Context for Unselected Items
+                let walkInfoHTML = '';
+                const relevantSelections = sortedSelections.filter(s => s.start < evt.time);
+                const lastSelected = relevantSelections[relevantSelections.length - 1];
+                let fromName = "Entrada";
+                let fromId = LOC.ENTRANCE;
+                if (lastSelected) {
+                    fromName = lastSelected.name;
+                    fromId = lastSelected.locId;
+                }
+                const distMins = getWalkTime(fromId, evt.locId);
+                const distMeters = distMins * METERS_PER_MIN; // Calculate distance
+                
+                if (distMins >= 0) {
+                     walkInfoHTML = `<div class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                        <i data-lucide="footprints" class="w-3 h-3"></i> 
+                        <span><strong>${distMins} min</strong> (${distMeters}m) desde ${fromName}</span>
+                     </div>`;
+                }
 
                 let statusIcon = '';
                 if(status === 'selected') statusIcon = '<i data-lucide="check" class="w-5 h-5 text-white"></i>';
+                if(status === 'selected-forced') statusIcon = '<i data-lucide="alert-triangle" class="w-4 h-4 text-white"></i>';
                 if(status === 'impossible') statusIcon = '<i data-lucide="x" class="w-5 h-5 text-red-300"></i>';
 
+                let dotClass = 'border-slate-200';
+                if(status === 'selected') dotClass = 'bg-green-500 border-green-500';
+                if(status === 'selected-forced') dotClass = 'bg-orange-500 border-orange-500';
+
+                let titleClass = "text-slate-800";
+                if(status === 'selected') titleClass = "text-green-900";
+                if(status === 'selected-forced') titleClass = "text-orange-900";
+                if(status === 'impossible') titleClass = "text-red-800 line-through decoration-red-300";
+
                 card.innerHTML = `
-                    <div class="w-24 shrink-0 text-center border-r border-slate-200 pr-3 mr-3 ${status === 'impossible' ? 'text-red-300 line-through' : (status === 'selected' ? 'text-green-800' : 'text-slate-700')}">
+                    <div class="w-24 shrink-0 text-center border-r border-slate-200 pr-3 mr-3 ${status === 'impossible' ? 'text-red-400 line-through' : 'text-slate-700'}">
                         ${timeHtml}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-bold truncate ${status === 'impossible' ? 'text-red-300 line-through' : (status === 'selected' ? 'text-green-900' : 'text-slate-800')}">
+                        <h4 class="font-bold truncate ${titleClass}">
                             ${evt.name}
                         </h4>
-                        <div class="flex items-center gap-2 text-xs ${status === 'selected' ? 'text-green-700' : 'text-slate-500'}">
-                            <span>⏱ ${evt.duration} min</span>
+                        <div class="flex flex-col gap-0.5">
+                            <div class="flex items-center gap-2 text-xs ${status.includes('selected') ? 'font-medium' : 'text-slate-500'}">
+                                <span>⏱ ${evt.duration} min</span>
+                            </div>
                             ${locBadge}
+                            ${walkInfoHTML}
                         </div>
                     </div>
-                    <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center shrink-0 ${status === 'selected' ? 'bg-green-500 border-green-500' : 'border-slate-200'}">
+                    <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center shrink-0 ${dotClass}">
                         ${statusIcon}
                     </div>
                 `;
                 container.appendChild(card);
             });
+            lucide.createIcons();
+        }
+
+        function renderSummary() {
+            const content = document.getElementById('summary-content');
+            const footer = document.getElementById('summary-footer');
+            content.innerHTML = '';
+            
+            if (selectedSessionsList.length === 0) {
+                content.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-slate-400">
+                    <i data-lucide="calendar-x" class="w-12 h-12 mb-2"></i>
+                    <p>No has seleccionado ningún espectáculo.</p>
+                </div>`;
+                footer.innerHTML = `<span>0 espectáculos</span>`;
+                lucide.createIcons();
+                return;
+            }
+
+            const sorted = [...selectedSessionsList].sort((a, b) => a.start - b.start);
+            const metrics = getItineraryMetrics();
+            let totalDist = 0;
+
+            sorted.forEach(session => {
+                const metric = metrics.get(session.id);
+                if(metric) totalDist = metric.totalDistKm;
+
+                const startStr = formatTime(session.start);
+                const endStr = formatTime(session.end);
+                
+                // Show Card
+                const card = document.createElement('div');
+                card.className = "bg-white border border-slate-200 rounded-lg p-3 shadow-sm break-inside-avoid"; // Added break-inside-avoid for print
+                
+                let warningHTML = "";
+                if(session.forced) {
+                    warningHTML = `<div class="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded mt-2 flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Horario forzado</div>`;
+                }
+
+                // Travel Info (if present)
+                let travelHTML = "";
+                if (metric) {
+                    travelHTML = `
+                    <div class="text-xs text-slate-500 mb-2 pl-2 border-l-2 border-slate-200">
+                        <div class="flex items-center gap-1">
+                            <i data-lucide="footprints" class="w-3 h-3"></i>
+                            ${metric.walkMins} min desde ${metric.fromName}
+                        </div>
+                    </div>`;
+                }
+
+                card.innerHTML = `
+                    ${travelHTML}
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="font-bold text-slate-800 text-lg">${startStr} - ${endStr}</div>
+                            <div class="font-medium text-indigo-700">${session.name}</div>
+                        </div>
+                        <div class="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded font-bold">
+                            ${Math.round((session.end - session.start)*60)} min
+                        </div>
+                    </div>
+                    ${warningHTML}
+                `;
+                content.appendChild(card);
+            });
+
+            footer.innerHTML = `
+                <div class="font-medium text-slate-700">${selectedSessionsList.length} espectáculos</div>
+                <div class="font-bold text-indigo-600 flex items-center gap-1"><i data-lucide="map" class="w-4 h-4"></i> ${totalDist} km totales</div>
+            `;
+            
             lucide.createIcons();
         }
 
@@ -848,8 +1307,10 @@
             shows.forEach(show => {
                 let barsHTML = '';
                 
-                if (show.type === 'fixed' || show.type === 'special') {
-                    show.times.forEach(timeStr => {
+                const generatedTimes = getShowTimes(show);
+                
+                if (generatedTimes) {
+                    generatedTimes.forEach(timeStr => {
                         const startDec = timeToDecimal(timeStr);
                         const id = generateSessionId(show.name, timeStr);
                         
@@ -867,23 +1328,27 @@
                         
                         let barClass = "";
                         let label = timeStr;
+                        let zIndex = "z-10";
                         
                         if (status === 'selected') {
-                            barClass = "bg-green-500 border-green-600 text-white z-20 shadow-lg ring-2 ring-white";
+                            barClass = "bg-green-500 border-green-600 text-white shadow-lg ring-2 ring-white";
                             label = "✓ " + timeStr;
+                            zIndex = "z-20";
+                        } else if (status === 'selected-forced') {
+                            barClass = "bg-orange-500 border-orange-600 text-white shadow-lg ring-2 ring-white";
+                            label = "! " + timeStr;
+                            zIndex = "z-20";
                         } else if (status === 'related') {
                             barClass = "bg-slate-200 border-slate-300 text-slate-400 border-dashed opacity-60";
                         } else if (status === 'impossible') {
-                            barClass = "bg-red-50 border-red-200 text-red-300 line-through opacity-60 cursor-not-allowed";
+                            barClass = "bg-red-50 border-red-200 text-red-400 line-through opacity-70 hover:opacity-100 hover:bg-red-100";
                         } else {
                             barClass = `${getColorClass(show.type)} hover:brightness-95 hover:shadow-md cursor-pointer`;
                         }
 
-                        const clickAttr = status !== 'impossible' ? `onclick="toggleSession('${id}', '${show.name}', ${startDec}, ${show.duration}, '${show.locationId}')"` : '';
-
                         barsHTML += `
-                        <div ${clickAttr}
-                             class="absolute h-8 rounded-md text-[10px] flex items-center justify-center font-bold px-1 overflow-hidden whitespace-nowrap border transition-all ${barClass}" 
+                        <div onclick="handleSessionClick('${id}', '${show.name}', ${startDec}, ${show.duration}, '${show.locationId}')"
+                             class="absolute h-8 rounded-md text-[10px] flex items-center justify-center font-bold px-1 overflow-hidden whitespace-nowrap border transition-all ${barClass} ${zIndex} cursor-pointer" 
                              style="left: ${left}px; width: ${width}px; top: 0;" 
                              title="${timeStr} - ${show.name}">
                              ${label}
@@ -897,11 +1362,18 @@
                      barsHTML += `<div class="absolute h-8 rounded-md text-[10px] flex items-center px-2 shadow-sm border bg-emerald-50 text-emerald-700 border-emerald-200 opacity-60" style="left: ${left}px; width: ${width}px; top: 0;"><div class="w-full text-center truncate">Acceso Continuo</div></div>`;
                 }
 
+                // Add duration label here
+                const durationLabel = show.duration > 0 ? ` • ${show.duration} min` : '';
+                const mapsLink = getMapsLink(show.locationName);
+
                 rowsHTML += `
                 <div class="flex items-center h-10 group hover:bg-slate-50 rounded transition-colors">
-                    <div class="w-64 shrink-0 text-sm font-medium text-slate-700 truncate pr-2 flex flex-col justify-center leading-tight">
-                        <span>${show.name}</span>
-                        <span class="text-[10px] text-slate-400 font-normal">${show.locationName}</span>
+                    <div class="w-64 shrink-0 text-sm font-medium text-slate-700 truncate pr-2 flex flex-col justify-center leading-tight sticky left-0 bg-white group-hover:bg-slate-50 z-30 border-r border-slate-100 pl-2">
+                        <div class="flex items-center gap-1.5">
+                            <span class="truncate">${show.name}</span>
+                            <a href="${mapsLink}" target="_blank" onclick="event.stopPropagation()" class="maps-btn bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-full p-0.5 shrink-0" title="Ver ubicación"><i data-lucide="map" class="w-3 h-3"></i></a>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-normal">${show.locationName}${durationLabel}</span>
                     </div>
                     <div class="relative flex-1 h-full">${barsHTML}</div>
                 </div>`;
@@ -926,6 +1398,10 @@
             lucide.createIcons();
             const modal = document.getElementById('ai-modal');
             modal.addEventListener('click', (e) => { if (e.target === modal) toggleAIModal(); });
+            
+            // Start Clock Interval
+            updateCurrentTimeLine();
+            setInterval(updateCurrentTimeLine, 60000); // Every minute
         });
 
     </script>
